@@ -1,26 +1,16 @@
 ﻿const gulp = require('gulp');
-const concat = require('gulp-concat');
-const minify = require('gulp-minify');
 const babel = require('gulp-babel');
-const imagemin = require('gulp-imagemin');
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
 
-// Task to bundle React components
-gulp.task('bundle', () => {
+gulp.task('build', () => {
   return gulp.src('src/**/*.js')
-    .pipe(concat('bundle.js'))
     .pipe(babel({
       presets: ['@babel/env', '@babel/react']
     }))
-    .pipe(minify())
-    .pipe(gulp.dest('public/js'));
+    .pipe(uglify())
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest('dist'));
 });
 
-// Task to optimize assets
-gulp.task('optimize-assets', () => {
-  return gulp.src('src/assets/**/*')
-    .pipe(imagemin())
-    .pipe(gulp.dest('public/assets'));
-});
-
-// Default task
-gulp.task('default', gulp.series('bundle', 'optimize-assets'));
+gulp.task('default', gulp.series('build'));
